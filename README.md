@@ -1,0 +1,2 @@
+# Next Gen AI HealthCare
+##### It will be a medical rental system where people will rent medical equipment to the people need it in emergency or otherwise. It also include an AI model that will diagnose people based on symptoms.
