@@ -1,0 +1,11 @@
+{
+  "name": "next_gen_ai_healthcare",
+  "version": "1.0.0",
+  "description": "It will be a medical rental system where people will rent medical equipment to the people need it in emergency or otherwise. It also include an AI model that will diagnose people based on symptoms.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "saad_zaid_umar_ilyas",
+  "license": "ISC"
+}
