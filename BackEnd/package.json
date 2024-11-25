@@ -9,7 +9,9 @@
   "author": "saad_zaid_umar_ilyas",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.21.1",
-    "mongoose": "^8.8.2"
+    "mongoose": "^8.8.2",
+    "validator": "^13.12.0"
   }
 }

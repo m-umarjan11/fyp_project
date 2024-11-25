@@ -1,11 +1,19 @@
 const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
+  userId: { type: mongoose.Schema.ObjectId, ref:'User', required: true },
   itemName: { type: String, required: true },
-  itemDescription: { type: String },
-  itemImages: { type: [String] },
-  itemPrice: { type: Number, default: 0 },
+  description: { type: String, required: true, },
+  images: { type: [String], required:true},
+  location: { 
+    type: { type: String, default: 'Point' }, 
+    coordinates: { type: [Number], required: true } 
+  }
+}, {
+  timestamps: true
 });
+
+
+itemSchema.index({ location: '2dsphere' });
 
 module.exports = mongoose.model('Item', itemSchema);
