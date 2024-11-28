@@ -1,4 +1,4 @@
-**# NextGen AI Healthcare**
+# NextGen AI Healthcare
 
 A platform combining AI-powered symptom diagnosis with a volunteer-driven medical rental system for emergencies and routine healthcare needs.
 
