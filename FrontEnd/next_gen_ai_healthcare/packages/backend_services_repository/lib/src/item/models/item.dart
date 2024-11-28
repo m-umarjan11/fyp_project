@@ -14,7 +14,7 @@ class Item {
       required this.images,
       required this.location});
 
-  ItemEntity toEntity(Item item) {
+  static ItemEntity toEntity(Item item) {
     return ItemEntity(
         itemId: item.itemId,
         itemName: item.itemName,
@@ -23,7 +23,7 @@ class Item {
         location: item.location);
   }
 
-  Item fromEntity(ItemEntity itemEntity) {
+  static Item fromEntity(ItemEntity itemEntity) {
     return Item(
         itemId: itemEntity.itemId,
         itemName: itemEntity.itemName,

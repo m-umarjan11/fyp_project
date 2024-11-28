@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ItemEntity {
   final String itemId;
   final String itemName;
@@ -16,8 +14,7 @@ class ItemEntity {
 
   
 
-  ItemEntity fromJson(String jsonString) {
-    Map<String, dynamic> jsonObject = json.decode(jsonString);
+  static ItemEntity fromJson(Map<String, dynamic> jsonObject) {
     return ItemEntity(
       itemId: jsonObject['itemId'],
       itemName: jsonObject['itemName'],
@@ -27,7 +24,7 @@ class ItemEntity {
     );
   }
 
-  Map<String, dynamic> toJson(ItemEntity itemEntity) {
+  static Map<String, dynamic> toJson(ItemEntity itemEntity) {
     return {
       'itemId': itemEntity.itemId,
       'itemName': itemEntity.itemName,

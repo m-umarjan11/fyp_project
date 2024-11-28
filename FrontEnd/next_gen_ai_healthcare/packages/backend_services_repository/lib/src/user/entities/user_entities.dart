@@ -16,7 +16,7 @@ class UserEntity {
       this.location,
       this.personReputation = 0});
 
-  UserEntity fromJson(String jsonString) {
+  static UserEntity fromJson(String jsonString) {
     Map<String, dynamic> jsonObject = json.decode(jsonString);
     return UserEntity(
       userId: jsonObject['userId'],
@@ -28,7 +28,7 @@ class UserEntity {
     );
   }
 
-  Map<String, dynamic> toJson(UserEntity userEntity) {
+  static Map<String, dynamic> toJson(UserEntity userEntity) {
     return {
       'userId': userEntity.userId,
       'userName': userEntity.userName,

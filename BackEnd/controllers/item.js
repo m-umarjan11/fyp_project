@@ -55,3 +55,36 @@ exports.deleteItem = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+// exports.getItemsNearMe = async (req, res) => {
+//   const { userLocation, setNo = 1 } = req.body;
+
+//   const ITEMS_PER_PAGE = 20;
+//   const skip = (setNo - 1) * ITEMS_PER_PAGE;
+
+//   try {
+//     if (!userLocation || !userLocation.lat || !userLocation.lng) {
+//       return res.status(400).json({ error: "Invalid location" });
+//     }
+
+//     const items = await Item.aggregate([
+//       {
+//         $geoNear: {
+//           near: {
+//             type: "Point",
+//             coordinates: [userLocation.lng, userLocation.lat], // [longitude, latitude]
+//           },
+//           distanceField: "distance", // Adds a field "distance" to each result
+//           spherical: true, // Use spherical geometry for calculations
+//         },
+//       },
+//       { $skip: skip }, // Skip the first N items
+//       { $limit: ITEMS_PER_PAGE }, // Limit the results to ITEMS_PER_PAGE
+//     ]);
+
+//     res.json(items);
+//   } catch (error) {
+//     res.status(500).json({ error: "Failed to fetch items" });
+//   }
+// };
