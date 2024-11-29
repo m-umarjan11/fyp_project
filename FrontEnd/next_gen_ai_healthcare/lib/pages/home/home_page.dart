@@ -8,7 +8,14 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SplashPage(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.light(
+            surface: Colors.grey.shade100,
+            onSurface: Colors.black,
+            primary: Colors.blue,
+            onPrimary: Colors.white),
+      ),
+      home: const SplashPage(),
     );
   }
 }

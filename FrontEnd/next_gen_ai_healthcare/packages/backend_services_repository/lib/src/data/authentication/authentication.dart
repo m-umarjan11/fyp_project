@@ -6,7 +6,7 @@ import 'package:backend_services_repository/src/user/entities/entities.dart';
 
 abstract class Authentication {
   Future<bool> checkUserAccountOnStartUp(); // If null then login, otherwise check if user has an account
-  Future<Result<User, String>> createAnAccount({required User user}); // Return error msg and User
+  Future<Result<User, String>> createAnAccount({required User user, required String password}); // Return error msg and User
   Future<void> saveAccountLocally({required User user});
   Future<Result<User, String>> login({required String email, required String password}); // Login with email/password
   Future<void> logout(); // Logout and clear local data
@@ -22,14 +22,17 @@ class AuthenticationImp extends Authentication {
   }
 
   @override
-  Future<Result<User, String>> createAnAccount({required User user}) async {
+  Future<Result<User, String>> createAnAccount({required User user, required String password}) async {
     Uri url = Uri.parse("$api/users/register");
     HttpClientRequest request = await http.postUrl(url);
     request.headers.set(HttpHeaders.contentTypeHeader, "application/json");
-    request.write(UserEntity.toJson(User.toEntity(user)));
+    Map<String, dynamic> toSend = UserEntity.toJson(User.toEntity(user));
+    toSend['password'] = password;
+    request.write(json.encode(toSend));
     HttpClientResponse response = await request.close();
     if (response.statusCode == 201) {
       String responseBody = await response.transform(utf8.decoder).join();
+      print("$responseBody");
       User updatedUser = User.fromEntity(UserEntity.fromJson(responseBody));
       return Result.success(updatedUser);
     } else if (response.statusCode >= 400 && response.statusCode < 500) {
@@ -57,7 +60,7 @@ class AuthenticationImp extends Authentication {
     if (response.statusCode == 200) {
       String responseBody = await response.transform(utf8.decoder).join();
       User loggedInUser = User.fromEntity(UserEntity.fromJson(responseBody));
-      await saveAccountLocally(user: loggedInUser); // Save user locally
+      await saveAccountLocally(user: loggedInUser); 
       return Result.success(loggedInUser);
     } else if (response.statusCode == 401) {
       return Result.failure("Invalid credentials");
@@ -68,6 +71,6 @@ class AuthenticationImp extends Authentication {
 
   @override
   Future<void> logout() async {
-    await SqlHelper().clearUserTable(); // Clear user data from SQLite
+    await SqlHelper().clearUserTable(); 
   }
 }

@@ -22,5 +22,5 @@ app.use('/api/v1/user-locations', userLocationRoutes);
 app.use('/api/v1/borrowed-items', itemBorrowedRoutes);
 
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, '0.0.0.0',() => console.log(`Server running on port ${PORT}`));

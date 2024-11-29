@@ -1,9 +1,9 @@
-import 'package:delivery_app/screens/auth/blocs/sign_in_bloc/sign_in_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:next_gen_ai_healthcare/blocs/sign_in_bloc/sign_in_bloc.dart';
+import 'package:next_gen_ai_healthcare/widgets/my_text_field.dart';
 
-import './../../../components/my_text_field.dart';
 
 
 class SignInPage extends StatefulWidget {
@@ -30,11 +30,11 @@ class _SignInPageState extends State<SignInPage> {
 					setState(() {
 					  signInRequired = false;
 					});
-				} else if(state is SignInProcess) {
+				} else if(state is SignInLoading) {
 					setState(() {
 					  signInRequired = true;
 					});
-				} else if(state is SignInFailure) {
+				} else if(state is SignInError) {
 					setState(() {
 					  signInRequired = false;
 						_errorMsg = 'Invalid email or password';

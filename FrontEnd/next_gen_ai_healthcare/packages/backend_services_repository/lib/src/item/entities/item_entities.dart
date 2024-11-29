@@ -16,7 +16,7 @@ class ItemEntity {
 
   static ItemEntity fromJson(Map<String, dynamic> jsonObject) {
     return ItemEntity(
-      itemId: jsonObject['itemId'],
+      itemId: jsonObject['_id'],
       itemName: jsonObject['itemName'],
       description: jsonObject['description'],
       images: jsonObject['images'],

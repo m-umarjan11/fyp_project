@@ -1,12 +1,20 @@
-const User = require('../models/user');
+const User = require("../models/user");
 
 exports.createUser = async (req, res) => {
+  console.log("Creating User");
   try {
-    // Assuming req.body contains all necessary user data, including location
-    const user = new User(req.body);
+    const user = new User({
+      'userName': req.body["userName"],
+      'email': req.body["email"],
+      'password': req.body["password"],
+      'picture': req.body["picture"],
+      'personReputation': req.body["personReputation"],
+      'location': req.body["location"],
+    });
     await user.save();
-    res.status(201).send(user);
+    res.status(201).json(user.toObject());
   } catch (error) {
+    console.log(error);
     res.status(400).send(error);
   }
 };
@@ -15,8 +23,8 @@ exports.getUser = async (req, res) => {
   try {
     // Find user by userId
     const user = await User.findOne({ userId: req.params.userId });
-    if (!user) return res.status(404).send('User not found');
-    res.send(user);  // Sends the user object which includes the location
+    if (!user) return res.status(404).send("User not found");
+    res.send(user); // Sends the user object which includes the location
   } catch (error) {
     res.status(500).send(error);
   }
@@ -34,12 +42,12 @@ exports.updateUser = async (req, res) => {
 
     const user = await User.findOneAndUpdate(
       { userId: req.params.userId },
-      updateData,  // Dynamically update fields, including location
+      updateData, // Dynamically update fields, including location
       { new: true }
     );
-    
-    if (!user) return res.status(404).send('User not found');
-    res.send(user);  // Sends the updated user object
+
+    if (!user) return res.status(404).send("User not found");
+    res.send(user); // Sends the updated user object
   } catch (error) {
     res.status(400).send(error);
   }
@@ -48,8 +56,8 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findOneAndDelete({ userId: req.params.userId });
-    if (!user) return res.status(404).send('User not found');
-    res.send({ message: 'User deleted successfully' });
+    if (!user) return res.status(404).send("User not found");
+    res.send({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).send(error);
   }

@@ -9,18 +9,21 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-      BlocBuilder<AuthBloc, AuthState>(builder: (context, state){
-        switch(state) {
-          case AuthLoading():
-            return const Scaffold(body: Center(child: CircularProgressIndicator(),),);
-          case AuthLoadingSuccess():
-            return const HomePage();
-          case AuthError():
-            return const WelcomePage();
-          default:
-            return const WelcomePage();
-        }
-      });
+    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+      switch (state) {
+        case AuthLoading():
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        case AuthLoadingSuccess():
+          return const HomePage();
+        case AuthError():
+          return const WelcomePage();
+        default:
+          return const WelcomePage();
+      }
+    });
   }
 }

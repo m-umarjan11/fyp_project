@@ -19,11 +19,11 @@ class UserEntity {
   static UserEntity fromJson(String jsonString) {
     Map<String, dynamic> jsonObject = json.decode(jsonString);
     return UserEntity(
-      userId: jsonObject['userId'],
+      userId: jsonObject['_id'],
       userName: jsonObject['userName'],
       email: jsonObject['email'],
       picture: jsonObject['picture'],
-      personReputation: jsonObject['personReputation'],
+      personReputation: jsonObject['personReputation'].toDouble(),
       location: jsonObject['location'],
     );
   }

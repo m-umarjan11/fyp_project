@@ -1,9 +1,9 @@
+import 'package:backend_services_repository/backend_service_repositoy.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:user_repository/user_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import './../../../components/my_text_field.dart';
-import './../blocs/sign_up_bloc/sign_up_bloc.dart';
+import 'package:next_gen_ai_healthcare/blocs/sign_up/sign_up_bloc.dart';
+import 'package:next_gen_ai_healthcare/widgets/my_text_field.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -35,11 +35,11 @@ class _SignUpPageState extends State<SignUpPage> {
 					setState(() {
 					  signUpRequired = false;
 					});
-				} else if(state is SignUpProcess) {
+				} else if(state is SignUpLoading) {
 					setState(() {
 					  signUpRequired = true;
 					});
-				} else if(state is SignUpFaliure) {
+				} else if(state is SignUpError) {
 					return;
 				} 
 			},
@@ -230,9 +230,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: TextButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          MyUser myUser = MyUser.empty;
-                          myUser.email = emailController.text;
-                          myUser.name = nameController.text;
+                          User myUser = User(userId: "", userName: nameController.text, email: emailController.text);
+                          
                           
                           setState(() {
                             context.read<SignUpBloc>().add(

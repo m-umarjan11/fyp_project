@@ -2,13 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:backend_services_repository/src/data/api.dart';
-import 'package:backend_services_repository/src/data/store_data/sql_helper.dart';
 import 'package:backend_services_repository/src/data/store_data/store_data.dart';
 import 'package:backend_services_repository/src/item/entities/entities.dart';
 import 'package:backend_services_repository/src/item/models/item.dart';
 import 'package:backend_services_repository/src/result_wraper.dart';
-import 'package:backend_services_repository/src/user/entities/entities.dart';
-import 'package:backend_services_repository/src/user/models/user.dart';
 
 class StoreDataImp extends StoreData {
   HttpClient http = HttpClient();

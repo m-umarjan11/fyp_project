@@ -1,6 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:next_gen_ai_healthcare/blocs/auth_bloc/auth_bloc.dart';
+import 'package:next_gen_ai_healthcare/blocs/sign_in_bloc/sign_in_bloc.dart';
+import 'package:next_gen_ai_healthcare/blocs/sign_up/sign_up_bloc.dart';
+import 'package:next_gen_ai_healthcare/pages/auth/sign_in_page.dart';
+import 'package:next_gen_ai_healthcare/pages/auth/sign_up_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -8,6 +13,7 @@ class WelcomePage extends StatefulWidget {
   @override
   State<WelcomePage> createState() => _WelcomePageState();
 }
+
 
 class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin {
 	late TabController tabController;
@@ -98,15 +104,17 @@ class _WelcomePageState extends State<WelcomePage> with TickerProviderStateMixin
 													children: [
 														BlocProvider<SignInBloc>(
 															create: (context) => SignInBloc(
-																context.read<AuthenticationBloc>().userRepository
+                                authBloc: context.read<AuthBloc>(),
+																auth:context.read<AuthBloc>().authentication
 															),
-															child: const SignInScreen(),
+															child: const SignInPage(),
 														),
 														BlocProvider<SignUpBloc>(
 															create: (context) => SignUpBloc(
-																context.read<AuthenticationBloc>().userRepository
+                                authBloc: context.read<AuthBloc>(),
+																auth:context.read<AuthBloc>().authentication
 															),
-															child: const SignUpScreen(),
+															child: const SignUpPage(),
 														),
 													],
 												)
