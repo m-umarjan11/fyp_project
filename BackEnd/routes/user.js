@@ -4,7 +4,8 @@ const userController = require('./../controllers/user');
 
 // Define routes
 
-router.post('/register',(req,res, next)=>{console.log(req.body);next();}, userController.createUser);
+router.post('/register', userController.createUser);
+router.post('/login', userController.logIn);
 router.get('/:userId', userController.getUser);
 router.put('/:userId', userController.updateUser);
 router.delete('/:userId', userController.deleteUser);

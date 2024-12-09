@@ -14,6 +14,7 @@ const itemSchema = new mongoose.Schema({
 });
 
 
-itemSchema.index({ location: '2dsphere' });
+itemSchema.index({ userId: 1, location: '2dsphere' });
+
 
 module.exports = mongoose.model('Item', itemSchema);

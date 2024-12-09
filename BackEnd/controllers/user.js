@@ -2,14 +2,15 @@ const User = require("../models/user");
 
 exports.createUser = async (req, res) => {
   console.log("Creating User");
+  const { userName, email, password, picture, personReputation, location } = req.body;
   try {
     const user = new User({
-      'userName': req.body["userName"],
-      'email': req.body["email"],
-      'password': req.body["password"],
-      'picture': req.body["picture"],
-      'personReputation': req.body["personReputation"],
-      'location': req.body["location"],
+      'userName': userName,
+      'email': email,
+      'password': password,
+      'picture': picture,
+      'personReputation': personReputation,
+      'location': location,
     });
     await user.save();
     res.status(201).json(user.toObject());
@@ -62,3 +63,24 @@ exports.deleteUser = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+
+exports.logIn = async(req, res) => {
+  const {  email, password } = req.body;
+  try {
+    const user = await User.findOne({email});
+    if(!user){
+      return res.status(404).send(`Account with ${email} not found.`);
+    }
+
+    const comparePassword = await user.comparePassword(password);
+    if(!comparePassword){
+      return res.status(404).send('Invalid Credentials');
+    }
+
+    return res.status(201).json(user.toObject());
+  } catch (e){
+    console.error(e);
+    return res.status(500).json({'msg': 'Internal Server Error'});
+  }
+}

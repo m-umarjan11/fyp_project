@@ -16,8 +16,7 @@ class UserEntity {
       this.location,
       this.personReputation = 0});
 
-  static UserEntity fromJson(String jsonString) {
-    Map<String, dynamic> jsonObject = json.decode(jsonString);
+  static UserEntity fromJson(Map<String, dynamic> jsonObject) {
     return UserEntity(
       userId: jsonObject['_id'],
       userName: jsonObject['userName'],

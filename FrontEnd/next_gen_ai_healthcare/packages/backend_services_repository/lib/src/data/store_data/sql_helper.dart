@@ -1,4 +1,3 @@
-import 'package:backend_services_repository/src/user/models/models.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -29,40 +28,13 @@ class SqlHelper {
       id TEXT PRIMARY KEY,
       name TEXT,
       email TEXT,
-      image TEXT,
+      image TEXT
     )''';
     await db.execute(sql);
+    await db.execute('CREATE TABLE theme(id INTEGER PRIMARY KEY, isLight INTEGER)');
   }
 
-  Future<void> insertUser(User user) async {
-    final db = await database;
-    Map<String, dynamic> map = {
-      'id': user.userId,
-      'name': user.userName,
-      'email': user.email,
-      'image': user.picture
-    };
-    await db.insert('user', map, conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-
-  Future<bool> checkUser() async {
-    final db = await database;
-    try {
-      Map<String, dynamic> user = (await db.query('user', limit: 1))[0];
-      if (user['name'].isNotEmpty) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<void> clearUserTable() async {
-    final db = await database;
-    await db.delete('user');
-  }
+  
 
   Future<void> closeDatabase() async {
     if (_database != null) {
@@ -70,4 +42,6 @@ class SqlHelper {
       _database = null;
     }
   }
+
+
 }

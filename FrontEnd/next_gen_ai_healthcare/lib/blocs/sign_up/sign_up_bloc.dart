@@ -1,6 +1,7 @@
 import 'package:backend_services_repository/backend_service_repositoy.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:next_gen_ai_healthcare/blocs/auth_bloc/auth_bloc.dart';
 
 part 'sign_up_event.dart';
@@ -15,11 +16,12 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       try {
         Result result =
             await auth.createAnAccount(user: event.user, password:event.password);
-            print(result.isSuccess);
         if (result.isSuccess) {
+          debugPrint("Adding AuthEvent");
           emit(SignUpSuccess(user: result.value));
           authBloc.add(Authenticate());
         } else {
+          debugPrint("Not Adding AuthEvent");
           emit(SignUpError(error: result.error));
         }
       } catch (e) {

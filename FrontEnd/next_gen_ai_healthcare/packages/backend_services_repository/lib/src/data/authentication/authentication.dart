@@ -1,44 +1,44 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:backend_services_repository/backend_service_repositoy.dart';
 import 'package:backend_services_repository/src/user/entities/entities.dart';
+import 'package:http/http.dart' as http;
 
 abstract class Authentication {
-  Future<bool> checkUserAccountOnStartUp(); // If null then login, otherwise check if user has an account
-  Future<Result<User, String>> createAnAccount({required User user, required String password}); // Return error msg and User
+  Future<bool> checkUserAccountOnStartUp(); 
+  Future<Result<User, String>> createAnAccount({required User user, required String password}); 
   Future<void> saveAccountLocally({required User user});
-  Future<Result<User, String>> login({required String email, required String password}); // Login with email/password
-  Future<void> logout(); // Logout and clear local data
+  Future<Result<User, String>> login({required String email, required String password}); 
+  Future<void> logout(); 
 }
 
 class AuthenticationImp extends Authentication {
-  HttpClient http = HttpClient();
-
   @override
   Future<bool> checkUserAccountOnStartUp() async {
-    bool checkUser = await SqlHelper().checkUser();
+    bool checkUser = await LocalUserData().checkUser();
     return checkUser;
   }
 
   @override
   Future<Result<User, String>> createAnAccount({required User user, required String password}) async {
     Uri url = Uri.parse("$api/users/register");
-    HttpClientRequest request = await http.postUrl(url);
-    request.headers.set(HttpHeaders.contentTypeHeader, "application/json");
     Map<String, dynamic> toSend = UserEntity.toJson(User.toEntity(user));
     toSend['password'] = password;
-    request.write(json.encode(toSend));
-    HttpClientResponse response = await request.close();
+
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode(toSend),
+    );
+
     if (response.statusCode == 201) {
-      String responseBody = await response.transform(utf8.decoder).join();
-      print("$responseBody");
+      final responseBody = json.decode(response.body);
       User updatedUser = User.fromEntity(UserEntity.fromJson(responseBody));
+      LocalUserData().insertUser(updatedUser);
       return Result.success(updatedUser);
     } else if (response.statusCode >= 400 && response.statusCode < 500) {
-      String msg =
-          json.decode(await response.transform(utf8.decoder).join())['msg'];
-      return Result.failure(msg);
+      final responseBody = json.decode(response.body);
+      return Result.failure("responseBody['msg']");
     } else {
       return Result.failure('An unexpected error occurred.');
     }
@@ -46,24 +46,27 @@ class AuthenticationImp extends Authentication {
 
   @override
   Future<void> saveAccountLocally({required User user}) async {
-    await SqlHelper().insertUser(user);
+    await LocalUserData().insertUser(user);
   }
 
   @override
   Future<Result<User, String>> login({required String email, required String password}) async {
     Uri url = Uri.parse("$api/users/login");
-    HttpClientRequest request = await http.postUrl(url);
-    request.headers.set(HttpHeaders.contentTypeHeader, "application/json");
-    request.write(json.encode({"email": email, "password": password}));
 
-    HttpClientResponse response = await request.close();
-    if (response.statusCode == 200) {
-      String responseBody = await response.transform(utf8.decoder).join();
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({"email": email, "password": password}),
+    );
+
+    if (response.statusCode == 201) {
+      final responseBody = json.decode(response.body);
       User loggedInUser = User.fromEntity(UserEntity.fromJson(responseBody));
-      await saveAccountLocally(user: loggedInUser); 
+      await saveAccountLocally(user: loggedInUser);
       return Result.success(loggedInUser);
-    } else if (response.statusCode == 401) {
-      return Result.failure("Invalid credentials");
+    } else if (response.statusCode >= 400 && response.statusCode < 600) {
+      final responseBody = json.decode(response.body);
+      return Result.failure(responseBody['msg']);
     } else {
       return Result.failure("An unexpected error occurred.");
     }
@@ -71,6 +74,6 @@ class AuthenticationImp extends Authentication {
 
   @override
   Future<void> logout() async {
-    await SqlHelper().clearUserTable(); 
+    await LocalUserData().clearUserTable();
   }
 }

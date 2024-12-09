@@ -227,7 +227,7 @@ class _SignUpPageState extends State<SignUpPage> {
               !signUpRequired
                 ? SizedBox(
                     width: MediaQuery.of(context).size.width * 0.5,
-                    child: TextButton(
+                    child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           User myUser = User(userId: "", userName: nameController.text, email: emailController.text);
@@ -243,21 +243,13 @@ class _SignUpPageState extends State<SignUpPage> {
                           });																			
                         }
                       },
-                      style: TextButton.styleFrom(
-                        elevation: 3.0,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(60)
-                        )
-                      ),
+                      
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 5),
                         child: Text(
                           'Sign Up',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w600
                           ),

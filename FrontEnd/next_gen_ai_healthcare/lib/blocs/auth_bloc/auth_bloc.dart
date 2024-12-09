@@ -12,7 +12,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try{
         bool check = await authentication.checkUserAccountOnStartUp();
+        print(check);
         if(check){
+          
           emit(AuthLoadingSuccess());
         }else{
           emit(AuthError());
