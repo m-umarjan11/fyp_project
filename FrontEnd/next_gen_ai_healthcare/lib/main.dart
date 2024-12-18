@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
         child: BlocBuilder<ThemeBloc, ThemeState>(
           builder: (context, themeState) {
             return MaterialApp(
+              debugShowCheckedModeBanner: false,
               theme: themeState.theme,
               home: const SplashPage(),
             );

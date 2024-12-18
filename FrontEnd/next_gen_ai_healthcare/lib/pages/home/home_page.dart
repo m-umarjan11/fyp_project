@@ -1,5 +1,11 @@
+import 'package:backend_services_repository/backend_service_repositoy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:next_gen_ai_healthcare/blocs/create_item_bloc/create_item_bloc.dart';
+import 'package:next_gen_ai_healthcare/pages/ai_diagnosis_pages/ai_diagnosis_page.dart';
+import 'package:next_gen_ai_healthcare/pages/item_pages/add_item.dart';
 import 'package:next_gen_ai_healthcare/pages/item_pages/item_page.dart';
+import 'package:next_gen_ai_healthcare/widgets/custom_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,60 +18,88 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).primaryColor;
-    final darkerPrimaryColor = primaryColor.withOpacity(0.8);
+    final darkerPrimaryColor = Theme.of(context).colorScheme.secondary;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("HomePage"),
       ),
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ItemPage(),
-              ),
-            );
-          },
-          child: Container(
-            width: 200,
-            height: 120,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [primaryColor, darkerPrimaryColor],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            CustomCard(
+                icon: Icons.medical_information_sharp,
+                gradient: const LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 172, 201, 6),
+                    Color.fromARGB(255, 85, 97, 20)
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-              ],
+                heightRatio: .2,
+                text: "Diagnose with AI",
+                ontap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AiDiagnosisPage(),
+                    ),
+                  );
+                },
+                widthRatio: 1),
+            const SizedBox(
+              height: 5,
             ),
-            child: const Column(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.category,
-                  color: Colors.white,
-                  size: 40,
+                CustomCard(
+                    icon: Icons.receipt_long_outlined,
+                    gradient: const LinearGradient(
+                      colors: [Colors.blue, Color.fromARGB(255, 42, 69, 90)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    heightRatio: .2,
+                    text: "Rent Medical Instruments",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ItemPage()));
+                    },
+                    widthRatio: .5),
+                const SizedBox(
+                  width: 5,
                 ),
-                SizedBox(height: 10),
-                Text(
-                  "Load Items",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                CustomCard(
+                    icon: Icons.add_box_sharp,
+                    gradient: const LinearGradient(
+                      colors: [
+                        Colors.redAccent,
+                        Color.fromARGB(255, 148, 35, 27)
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    heightRatio: .2,
+                    text: "Add Medical Instruments",
+                    ontap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => (BlocProvider(
+                                    create: (context) => CreateItemBloc(
+                                        storeData: StoreDataImp()),
+                                    child: const AddItem(),
+                                  ))));
+                    },
+                    widthRatio: .5)
               ],
-            ),
-          ),
+            )
+          ],
         ),
       ),
     );

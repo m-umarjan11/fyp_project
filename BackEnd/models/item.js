@@ -7,10 +7,10 @@ const itemSchema = new mongoose.Schema({
   images: { type: [String], required:false},
   rating: { type: Number, required:false},
   sales: { type: Number, required:false},
-  location: { 
-    type: { type: String, default: 'Point' }, 
-    coordinates: { type: [Number], required: false } 
-  }
+  location: {
+    type: { type: String, default: "Point" },
+    coordinates: { type: [Number], required: false, default: [0, 0] },
+  },
 }, {
   timestamps: true
 });
