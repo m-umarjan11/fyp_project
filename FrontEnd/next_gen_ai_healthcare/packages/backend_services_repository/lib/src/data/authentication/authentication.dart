@@ -5,7 +5,7 @@ import 'package:backend_services_repository/src/user/entities/entities.dart';
 import 'package:http/http.dart' as http;
 
 abstract class Authentication {
-  Future<bool> checkUserAccountOnStartUp(); 
+  Future<Map<String, dynamic>> checkUserAccountOnStartUp(); 
   Future<Result<User, String>> createAnAccount({required User user, required String password}); 
   Future<void> saveAccountLocally({required User user});
   Future<Result<User, String>> login({required String email, required String password}); 
@@ -14,8 +14,8 @@ abstract class Authentication {
 
 class AuthenticationImp extends Authentication {
   @override
-  Future<bool> checkUserAccountOnStartUp() async {
-    bool checkUser = await LocalUserData().checkUser();
+  Future<Map<String, dynamic>> checkUserAccountOnStartUp() async {
+    Map<String, dynamic> checkUser = await LocalUserData().getUser();
     return checkUser;
   }
 
@@ -38,7 +38,7 @@ class AuthenticationImp extends Authentication {
       return Result.success(updatedUser);
     } else if (response.statusCode >= 400 && response.statusCode < 500) {
       final responseBody = json.decode(response.body);
-      return Result.failure("responseBody['msg']");
+      return Result.failure(responseBody['msg'] );
     } else {
       return Result.failure('An unexpected error occurred.');
     }
@@ -66,7 +66,7 @@ class AuthenticationImp extends Authentication {
       return Result.success(loggedInUser);
     } else if (response.statusCode >= 400 && response.statusCode < 600) {
       final responseBody = json.decode(response.body);
-      return Result.failure(responseBody['msg']);
+      return Result.failure(responseBody['error']['message']);
     } else {
       return Result.failure("An unexpected error occurred.");
     }

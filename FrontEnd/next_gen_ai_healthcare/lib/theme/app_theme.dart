@@ -37,6 +37,7 @@ class AppThemes {
         onError: Colors.white,
         onTertiary: Colors.black87,
         onSurface: Colors.black54,
+        onSurfaceVariant: Colors.grey[600]
       ),
       brightness: Brightness.light,
       primaryColor: primaryColor,
@@ -126,6 +127,7 @@ class AppThemes {
         onError: Colors.black,
         onTertiary: Colors.white70,
         onSurface: Colors.white60,
+        onSurfaceVariant: Colors.grey[600]
       ),
       brightness: Brightness.dark,
       primaryColor: primaryColor,

@@ -4,23 +4,31 @@ class ItemEntity {
   final String description;
   final List<String> images;
   final Map<String, dynamic> location;
+  final String seller; 
+  final int sold;      
+  final double rating; 
 
-  ItemEntity(
-      {required this.itemId,
-      required this.itemName,
-      required this.description,
-      required this.images,
-      required this.location});
-
-  
+  ItemEntity({
+    required this.itemId,
+    required this.itemName,
+    required this.description,
+    required this.images,
+    required this.location,
+    required this.seller,
+    required this.sold,
+    required this.rating,
+  });
 
   static ItemEntity fromJson(Map<String, dynamic> jsonObject) {
     return ItemEntity(
       itemId: jsonObject['_id'],
       itemName: jsonObject['itemName'],
       description: jsonObject['description'],
-      images: jsonObject['images'],
-      location: jsonObject['location'],
+      images: List<String>.from(jsonObject['images']),
+      location: Map<String, dynamic>.from(jsonObject['location']),
+      seller: jsonObject['seller'],
+      sold: jsonObject['sold'], 
+      rating: (jsonObject['rating'] as num).toDouble(), 
     );
   }
 
@@ -31,6 +39,9 @@ class ItemEntity {
       'description': itemEntity.description,
       'images': itemEntity.images,
       'location': itemEntity.location,
+      'seller': itemEntity.seller,
+      'sold': itemEntity.sold,     
+      'rating': itemEntity.rating, 
     };
   }
 }

@@ -7,17 +7,14 @@ import 'package:next_gen_ai_healthcare/pages/auth/splash_page.dart';
 import 'package:next_gen_ai_healthcare/pages/home/home_page.dart';
 import 'package:next_gen_ai_healthcare/simple_bloc_observer.dart';
 import 'package:next_gen_ai_healthcare/theme/app_theme.dart';
-import 'package:next_gen_ai_healthcare/widgets/item_widget.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
   runApp(
-    // MyApp(
-    // authentication: AuthenticationImp(),)
-     MaterialApp(
-      theme: AppThemes.darkTheme,
-      home: HomePage())
+    MyApp(
+    authentication: AuthenticationImp(),)
+     
   );
 }
 

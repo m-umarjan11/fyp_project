@@ -33,6 +33,20 @@ class LocalUserData {
       return false;
     }
   }
+  
+  Future<Map<String, dynamic>> getUser()async{
+    final db = await _sqlHelper.database;
+    try {
+      Map<String, dynamic> user = (await db.query('user', limit: 1))[0];
+      if (user['name'].isNotEmpty) {
+        return user;
+      } else {
+        return {};
+      }
+    } catch (e) {
+      return {};
+    }
+  }
 
   Future<void> clearUserTable() async {
     final db = await _sqlHelper.database;

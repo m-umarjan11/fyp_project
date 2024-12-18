@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:backend_services_repository/backend_service_repositoy.dart';
+import 'package:flutter/foundation.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -11,11 +12,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<Authenticate>((event, emit)async {
       emit(AuthLoading());
       try{
-        bool check = await authentication.checkUserAccountOnStartUp();
-        print(check);
-        if(check){
-          
-          emit(AuthLoadingSuccess());
+        Map<String, dynamic> check = await authentication.checkUserAccountOnStartUp();
+        debugPrint(check.toString());
+        if(check.isNotEmpty){ 
+          emit(AuthLoadingSuccess(user: User(userId: check['id'], userName: check['name'], email: check['email'], picture: check['picture'])));
         }else{
           emit(AuthError());
         }
