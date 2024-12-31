@@ -4,9 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:next_gen_ai_healthcare/blocs/auth_bloc/auth_bloc.dart';
 import 'package:next_gen_ai_healthcare/blocs/theme_bloc/theme_bloc.dart';
 import 'package:next_gen_ai_healthcare/pages/auth/splash_page.dart';
-import 'package:next_gen_ai_healthcare/pages/home/home_page.dart';
 import 'package:next_gen_ai_healthcare/simple_bloc_observer.dart';
-import 'package:next_gen_ai_healthcare/theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
