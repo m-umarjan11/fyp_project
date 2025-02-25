@@ -68,9 +68,12 @@ class AppThemes {
         ),
       ),
       textTheme: const TextTheme(
-        bodyLarge: TextStyle(color: Colors.black87),
-        bodyMedium: TextStyle(color: Colors.black54),
-      ),
+      bodyLarge: TextStyle(fontSize: 18, color: Colors.black87),
+      bodyMedium: TextStyle(fontSize: 16, color: Colors.black54),
+      bodySmall: TextStyle(fontSize: 14, color: Colors.black45),
+      headlineLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
+      labelSmall: TextStyle(fontSize: 18, color: Colors.black54),
+    ),
       inputDecorationTheme: const InputDecorationTheme(
         filled: true,
         fillColor: Color(0xFFF2F2F2),
@@ -158,10 +161,14 @@ class AppThemes {
               const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
       ),
-      textTheme: const TextTheme(
-        bodyLarge: TextStyle(color: Colors.white70),
-        bodyMedium: TextStyle(color: Colors.white60),
-      ),
+       textTheme: const TextTheme(
+      bodyLarge: TextStyle(fontSize: 18, color: Colors.white70),
+      bodyMedium: TextStyle(fontSize: 16, color: Colors.white60),
+      bodySmall: TextStyle(fontSize: 14, color: Colors.white54),
+      headlineLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white70),
+      labelSmall: TextStyle(fontSize: 18, color: Colors.white60),
+    ),
+  
       inputDecorationTheme: const InputDecorationTheme(
         filled: true,
         fillColor: Color(0xFF1F1F1F),

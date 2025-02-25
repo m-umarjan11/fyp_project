@@ -11,3 +11,4 @@ export "./src/data/retrieve_data/retrieve_data_imp.dart";
 export "./src/data/authentication/authentication.dart";
 export "./src/data/local_storage/local_user_data.dart";
 export "./src/data/local_storage/local_theme_data.dart";
+export './src/utils/order_and_payment_imp.dart';

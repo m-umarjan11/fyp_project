@@ -15,6 +15,7 @@ abstract class Authentication {
 class AuthenticationImp extends Authentication {
   @override
   Future<Map<String, dynamic>> checkUserAccountOnStartUp() async {
+    // print("Dddddddddd");
     Map<String, dynamic> checkUser = await LocalUserData().getUser();
     return checkUser;
   }

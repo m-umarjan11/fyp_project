@@ -6,7 +6,12 @@ const itemBorrowedSchema = new mongoose.Schema({
     ref: 'Item',  
     required: true 
   },
-  userId: { 
+  borrowerId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User',  
+    required: true 
+  },
+  lenderId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User',  
     required: true 

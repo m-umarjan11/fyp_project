@@ -3,7 +3,7 @@ description: This repository will be used to store and retrieve data and authent
 publish_to: 'none'
 version: 0.01.0
 environment:
-  sdk: ^3.5.3
+  sdk: ^3.5.1
 dependencies:
   flutter:
     sdk: flutter

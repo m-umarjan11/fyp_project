@@ -108,20 +108,11 @@ class _WelcomePageState extends State<WelcomePage>
                   ),
                 ),
               ),
-              Positioned(
+              //TO remove
+               Positioned(
                   top: 30,
                   right: 10,
-                  child: Switch(
-                      value: context.read<ThemeBloc>().isDark,
-                      onChanged: (v) {
-                        v
-                            ? context
-                                .read<ThemeBloc>()
-                                .add(ThemeToggleDarkEvent())
-                            : context
-                                .read<ThemeBloc>()
-                                .add(ThemeToggleLightEvent());
-                      }))
+                  child: SizedBox())
             ],
           ),
         ),

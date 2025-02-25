@@ -7,6 +7,7 @@ class ItemWidget extends StatelessWidget {
   final int sold;
   final double rating;
   final String description;
+  final VoidCallback onTap;
 
   const ItemWidget({
     super.key,
@@ -15,14 +16,14 @@ class ItemWidget extends StatelessWidget {
     required this.seller,
     required this.sold,
     required this.rating,
-    required this.description
+    required this.description,
+    required this.onTap
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-      },
+      onTap: onTap,
       child: Container(
         height: 377,
         width: 150,
@@ -38,11 +39,13 @@ class ItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 150,
+              height: 119,
               decoration:  BoxDecoration(
                 image:  DecorationImage(
-                  image: NetworkImage(images[0]), 
-                  fit: BoxFit.cover,
+                  fit:BoxFit.contain,
+                  image: NetworkImage(
+                    
+                    images.isEmpty?"https://www.accu-chek.com.pk/sites/g/files/iut956/f/styles/image_300x400/public/media_root/product_media_files/product_images/active-mgdl-300x400.png?itok=bgvuYJFy":images[0]), 
                 ),
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
               ),

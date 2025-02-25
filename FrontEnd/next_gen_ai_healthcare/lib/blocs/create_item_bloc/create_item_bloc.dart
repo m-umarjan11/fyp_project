@@ -11,14 +11,14 @@ class CreateItemBloc extends Bloc<CreateItemEvent, CreateItemState> {
     on<CreateItemRequiredEvent>((event, emit)async {
       emit(CreateItemLoadingState());
       try{
-        Result result = await storeData.createItemObjectInDatabase(event.userId);
+        Result result = await storeData.createItemObjectInDatabase(event.userId, event.item);
         if(result.isFailure){
           emit(CreateItemErrorState(errorMessage: result.error));
           return;
         }
-        Result azureResult = await storeData.uploadToAzureBlobStorage(event.imagePaths, result.value);
+        // Result azureResult = await storeData.uploadToAzureBlobStorage(event.imagePaths, result.value);
         
-        emit(CreateItemSuccessState(success: azureResult, images: event.imagePaths));
+        emit(CreateItemSuccessState());
       } catch (e){
         print(e);
           emit(const CreateItemErrorState(errorMessage: "We are very sorry. Some unexpected error occurred."));

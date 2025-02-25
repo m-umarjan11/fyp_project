@@ -9,6 +9,9 @@ class Item {
   final String seller; 
   final int sold;      
   final double rating; 
+  final String userId; 
+  final bool isRented;
+  final int price;
 
   Item({
     required this.itemId,
@@ -19,6 +22,9 @@ class Item {
     required this.seller,
     required this.sold,
     required this.rating,
+    required this.userId, 
+    required this.isRented,
+    required this.price
   });
 
   static ItemEntity toEntity(Item item) {
@@ -31,6 +37,9 @@ class Item {
       seller: item.seller,
       sold: item.sold,     
       rating: item.rating, 
+      userId: item.userId, 
+      isRented: item.isRented,
+      price: item.price
     );
   }
 
@@ -44,6 +53,9 @@ class Item {
       seller: itemEntity.seller,
       sold: itemEntity.sold,     
       rating: itemEntity.rating, 
+      userId: itemEntity.userId, 
+      price: itemEntity.price,
+      isRented: itemEntity.isRented
     );
   }
 }

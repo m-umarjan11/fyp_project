@@ -17,11 +17,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if(check.isNotEmpty){ 
           emit(AuthLoadingSuccess(user: User(userId: check['id'], userName: check['name'], email: check['email'], picture: check['picture'])));
         }else{
+        debugPrint("here");
           emit(AuthError());
         }
       } catch (e){
         emit(AuthError());
       }
+    });
+
+    on<AuthLogout>((event, emit){
+      authentication.logout();
+      add(Authenticate());
     });
   }
 }

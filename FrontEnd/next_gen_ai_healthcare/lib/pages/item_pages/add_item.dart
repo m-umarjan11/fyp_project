@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:backend_services_repository/backend_service_repositoy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +14,7 @@ class AddItem extends StatefulWidget {
 class _AddItemState extends State<AddItem> {
   final _formKey = GlobalKey<FormState>();
   final _itemNameController = TextEditingController();
+  final _priceController= TextEditingController();
   final _descriptionController = TextEditingController();
   final _sellerController = TextEditingController();
   List<String>? images;
@@ -68,59 +67,66 @@ class _AddItemState extends State<AddItem> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Description';
                           }
+                          if(double.tryParse(_priceController.text)==null){
+                            return "Please enter a valid number";
+                          }
                           return null;
                         },
                       ),
-                      // const SizedBox(height: 10,),
-                      // TextFormField(
-                      //   controller: _sellerController,
-                      //   decoration: const InputDecoration(labelText: 'Seller'),
-                      //   validator: (value) {
-                      //     if (value == null || value.isEmpty) {
-                      //       return 'Please enter Seller Name';
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _priceController,
+                        decoration:
+                            const InputDecoration(labelText: 'Item Price'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Item Price';
+                          }
+                          return null;
+                        },
+                      ),
+                     
+                      const SizedBox(height: 16),
+                      // TextButton(
+                      //   onPressed: () {
+                      //     context
+                      //         .read<CreateItemBloc>()
+                      //         .add(CreateItemLoadImagesEvent());
+                      //   },
+                      //   child: const Text('Pick Images'),
+                      // ),
+                      // const SizedBox(height: 16),
+                      // const Text('Selected Images:'),
+                      // BlocBuilder<CreateItemBloc, CreateItemState>(
+                      //   builder: (context, state) {
+                      //     if (state is CreateItemLoadImages) {
+                      //       images = state.images;
+                      //       return SizedBox(
+                      //         height: 100,
+                      //         child: ListView.builder(
+                      //           scrollDirection: Axis.horizontal,
+                      //           itemCount: images!.length,
+                      //           itemBuilder: (context, index) {
+                      //             return Padding(
+                      //               padding: const EdgeInsets.all(8.0),
+                      //               child: Image.file(
+                      //                 File(images![index]),
+                      //                 width: 100,
+                      //                 height: 100,
+                      //                 fit: BoxFit.cover,
+                      //               ),
+                      //             );
+                      //           },
+                      //         ),
+                      //       );
+                      //     } else {
+                      //       return const SizedBox();
                       //     }
-                      //     return null;
                       //   },
                       // ),
-                      const SizedBox(height: 16),
-                      TextButton(
-                        onPressed: () {
-                          context
-                              .read<CreateItemBloc>()
-                              .add(CreateItemLoadImagesEvent());
-                        },
-                        child: const Text('Pick Images'),
-                      ),
-                      const SizedBox(height: 16),
-                      const Text('Selected Images:'),
-                      BlocBuilder<CreateItemBloc, CreateItemState>(
-                        builder: (context, state) {
-                          if (state is CreateItemLoadImages) {
-                            images = state.images;
-                            return SizedBox(
-                              height: 100,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: images!.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.file(
-                                      File(images![index]),
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16),
+                      // const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
                           final authState = context.read<AuthBloc>().state
@@ -131,15 +137,23 @@ class _AddItemState extends State<AddItem> {
                                   userId: authState.user.userId,
                                     item: Item(
                                         itemId: "",
+                                        userId: authState.user.userId,
                                         itemName: _itemNameController.text,
                                         description:
                                             _descriptionController.text,
-                                        images: images!,
+                                        // images: images!,
+                                        images: ["https://www.accu-chek.com.pk/sites/g/files/iut956/f/styles/image_300x400/public/media_root/product_media_files/product_images/active-mgdl-300x400.png?itok=bgvuYJFy"],
                                         location: {},
                                         seller: authState.user.userName,
                                         sold: 0,
-                                        rating: 0),
-                                    imagePaths: images!));
+                                        rating: 0,
+                                        price: int.parse(_priceController.text),
+                                        isRented: false
+                                        ),
+                                    // imagePaths: images!
+                                        imagePaths: const ["https://www.accu-chek.com.pk/sites/g/files/iut956/f/styles/image_300x400/public/media_root/product_media_files/product_images/active-mgdl-300x400.png?itok=bgvuYJFy"],
+                                        
+                                    ));
                           }
                         },
                         child: const Text('Submit'),
@@ -158,7 +172,12 @@ class _AddItemState extends State<AddItem> {
                 child: const Center(child: CircularProgressIndicator(),),
               );
               } else if(state is CreateItemSuccessState){
-                return  AlertDialog(content: Text(state.success.value),);
+                return  InkWell(
+                  onTap: (){Navigator.of(context).pop();},
+                  child: Container(
+                  color: const Color.fromARGB(108, 0, 0, 0),
+                    child: const AlertDialog(title: Text("Success"),content: Column(mainAxisSize:MainAxisSize.min, children: [Icon(Icons.verified, size: 50,),Text("Successfully created the item")],),)),
+                );
               }else if(state is CreateItemErrorState){
                 return  SizedBox(child: Text(state.errorMessage),);
               }else{

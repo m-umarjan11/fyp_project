@@ -7,6 +7,9 @@ class ItemEntity {
   final String seller; 
   final int sold;      
   final double rating; 
+  final String userId;
+  final int price;
+  final bool isRented;
 
   ItemEntity({
     required this.itemId,
@@ -17,18 +20,24 @@ class ItemEntity {
     required this.seller,
     required this.sold,
     required this.rating,
+    required this.userId, 
+    required this.isRented,
+    required this.price
   });
 
   static ItemEntity fromJson(Map<String, dynamic> jsonObject) {
     return ItemEntity(
-      itemId: jsonObject['_id'],
-      itemName: jsonObject['itemName'],
-      description: jsonObject['description'],
+      itemId: jsonObject['_id'] ?? "",
+      itemName: jsonObject['itemName'] ?? "",
+      description: jsonObject['description'] ?? "",
       images: List<String>.from(jsonObject['images']),
       location: Map<String, dynamic>.from(jsonObject['location']),
-      seller: jsonObject['seller'],
-      sold: jsonObject['sold'], 
-      rating: (jsonObject['rating'] as num).toDouble(), 
+      seller: jsonObject['seller'] ?? "",
+      sold: jsonObject['sold'] ?? 0, 
+      rating: (jsonObject['rating'] as num?)?.toDouble() ?? 0.0,
+      userId: jsonObject['userId'] ?? "",
+      isRented: jsonObject['isRented']??false,
+      price: jsonObject['price']
     );
   }
 
@@ -42,6 +51,9 @@ class ItemEntity {
       'seller': itemEntity.seller,
       'sold': itemEntity.sold,     
       'rating': itemEntity.rating, 
+      'userId': itemEntity.userId,
+      'isRented': itemEntity.isRented,
+      'price': itemEntity.price
     };
   }
 }

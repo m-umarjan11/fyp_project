@@ -44,6 +44,7 @@ class LocalUserData {
         return {};
       }
     } catch (e) {
+        print("********************************************");
       return {};
     }
   }
