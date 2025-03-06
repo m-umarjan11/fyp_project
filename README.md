@@ -2,7 +2,10 @@
 
 A platform combining AI-powered symptom diagnosis with a volunteer-driven medical rental system for emergencies and routine healthcare needs.
 
-*The `index.html` file contains the y-data profiling report.*
+
+**Live Profiling Report:**
+
+*The `index.html` file contains the y-data profiling report. You can view the live report [here](https://m-saad-0.github.io/fyp_project/).*
 
 **Features:**
 
