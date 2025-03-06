@@ -31,10 +31,9 @@ class _HomePageState extends State<HomePage> {
               _buildFeatureSection(
                 context,
                 title: "AI-Powered Diagnosis",
-                description:
-                    "Use advanced AI to analyze symptoms and get quick insights.",
+                description: "Get quick AI-based health insights.",
                 icon: Icons.medical_information_sharp,
-                imagePath: 'assets/images/ai_diagnosis.jpg',
+                imagePath: 'assets/images/ai_diagnosis.png',
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -45,8 +44,7 @@ class _HomePageState extends State<HomePage> {
               _buildFeatureSection(
                 context,
                 title: "Rent Medical Instruments",
-                description:
-                    "Browse and rent high-quality medical instruments easily.",
+                description: "Easily rent quality medical tools.",
                 icon: Icons.receipt_long_outlined,
                 imagePath: 'assets/images/rent_instruments.png',
                 onTap: () => Navigator.push(
@@ -62,10 +60,9 @@ class _HomePageState extends State<HomePage> {
               _buildFeatureSection(
                 context,
                 title: "Add Medical Instruments",
-                description:
-                    "Contribute by adding medical instruments for others to rent.",
+                description: "List instruments for rent.",
                 icon: Icons.add_box_sharp,
-                imagePath: 'assets/images/add_instruments.jpg',
+                imagePath: 'assets/images/add_instruments.png',
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -112,4 +109,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

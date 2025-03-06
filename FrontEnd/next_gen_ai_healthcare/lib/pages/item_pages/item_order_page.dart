@@ -29,9 +29,9 @@ class _ItemOrderPageState extends State<ItemOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Your requests"),
+        title: const Text("Your order"),
       ),
-      body: items != null || items!.isNotEmpty
+      body: items != null 
           ? ListView.builder(
               itemBuilder: (context, index) => ListTile(
                 leading: Image(image: NetworkImage(items![index].images[0])),
@@ -41,7 +41,7 @@ class _ItemOrderPageState extends State<ItemOrderPage> {
               ),
             )
           : const Center(
-              child: Text("No requests found"),
+              child: Text("No orders found"),
             ),
     );
   }

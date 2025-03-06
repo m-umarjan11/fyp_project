@@ -44,6 +44,7 @@ dependencies:
   backend_services_repository:
     path: "packages/backend_services_repository"
   fluttertoast: ^8.2.10
+  firebase_core: ^3.12.1
 
 dev_dependencies:
   flutter_test:

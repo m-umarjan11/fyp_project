@@ -174,28 +174,28 @@ class _SignUpPageState extends State<SignUpPage> {
                             "⚈  1 uppercase",
                             style: TextStyle(
                                 color: containsUpperCase
-                                    ? Colors.green
+                                    ? Theme.of(context).primaryColor
                                     : Theme.of(context)
                                         .colorScheme
-                                        .onBackground),
+                                        .onSurface),
                           ),
                           Text(
                             "⚈  1 lowercase",
                             style: TextStyle(
                                 color: containsLowerCase
-                                    ? Colors.green
+                                    ? Theme.of(context).primaryColor
                                     : Theme.of(context)
                                         .colorScheme
-                                        .onBackground),
+                                        .onSurface),
                           ),
                           Text(
                             "⚈  1 number",
                             style: TextStyle(
                                 color: containsNumber
-                                    ? Colors.green
+                                    ? Theme.of(context).primaryColor
                                     : Theme.of(context)
                                         .colorScheme
-                                        .onBackground),
+                                        .onSurface),
                           ),
                         ],
                       ),
@@ -206,19 +206,19 @@ class _SignUpPageState extends State<SignUpPage> {
                             "⚈  1 special character",
                             style: TextStyle(
                                 color: containsSpecialChar
-                                    ? Colors.green
+                                    ? Theme.of(context).primaryColor
                                     : Theme.of(context)
                                         .colorScheme
-                                        .onBackground),
+                                        .onSurface),
                           ),
                           Text(
                             "⚈  8 minimum character",
                             style: TextStyle(
                                 color: contains8Length
-                                    ? Colors.green
+                                    ? Theme.of(context).primaryColor
                                     : Theme.of(context)
                                         .colorScheme
-                                        .onBackground),
+                                        .onSurface),
                           ),
                         ],
                       ),

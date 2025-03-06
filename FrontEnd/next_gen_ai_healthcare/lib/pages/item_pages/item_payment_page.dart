@@ -11,9 +11,9 @@ class ItemPaymentPage extends StatefulWidget {
 }
 
 class _ItemPaymentPageState extends State<ItemPaymentPage> {
+  String selectedPaymentOption = "Cash on delivery";
   @override
   Widget build(BuildContext context) {
-    String selectedPaymentOption = "Cash on delivery";
     return Scaffold(
       appBar: AppBar(title: Text("Payment for ${widget.item.itemName}")),
       body: Padding(
@@ -34,6 +34,7 @@ class _ItemPaymentPageState extends State<ItemPaymentPage> {
                   });
                 }),
             RadioListTile(
+                title: const Text("Card"),
                 secondary: const Icon(Icons.credit_card),
                 value: "Card",
                 groupValue: selectedPaymentOption,
@@ -44,6 +45,7 @@ class _ItemPaymentPageState extends State<ItemPaymentPage> {
                 }),
             RadioListTile(
                 secondary: const Icon(Icons.monetization_on),
+                title: const Text("Easypaisa"),
                 value: "Easypaisa",
                 groupValue: selectedPaymentOption,
                 onChanged: (value) {

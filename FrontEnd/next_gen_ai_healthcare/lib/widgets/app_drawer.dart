@@ -7,6 +7,7 @@ import 'package:next_gen_ai_healthcare/blocs/theme_bloc/theme_bloc.dart';
 import 'package:next_gen_ai_healthcare/pages/auth/splash_page.dart';
 import 'package:next_gen_ai_healthcare/pages/item_pages/item_order_page.dart';
 import 'package:next_gen_ai_healthcare/pages/item_pages/item_request_page.dart';
+import 'package:next_gen_ai_healthcare/pages/settings/settings_page.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -21,17 +22,18 @@ class AppDrawer extends StatelessWidget {
         height: 50,
       ),
       CircleAvatar(
+        radius: 40,
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: Text(
-          name.trim().split(" ").map((e) => e[0]).toList().join(),
-          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          name.trim().split(" ").map((e) => e[0]).toList().join().toUpperCase(),
+          style: const TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
         ),
       ),
       const SizedBox(
         height: 10,
       ),
       Text(name),
-      Text(user.location.toString()), //TODO: Do something about it
+      // Text(user.location.toString()), //TODO: Do something about it
       const SizedBox(
         height: 10,
       ),
@@ -60,12 +62,12 @@ class AppDrawer extends StatelessWidget {
         trailing: const Icon(Icons.arrow_forward_ios_outlined),
       ),
 
-      ListTile(
-        onTap: () {},
-        leading: const Icon(Icons.outbox),
-        title: const Text("Your Order"),
-        trailing: const Icon(Icons.arrow_forward_ios_outlined),
-      ),
+      // ListTile(
+      //   onTap: () {},
+      //   leading: const Icon(Icons.outbox),
+      //   title: const Text("Your Order"),
+      //   trailing: const Icon(Icons.arrow_forward_ios_outlined),
+      // ),
 
       ListTile(
         onTap: () {
@@ -93,7 +95,9 @@ class AppDrawer extends StatelessWidget {
       ),
 
       ListTile(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>const SettingsPage()));
+        },
         leading: const Icon(Icons.settings),
         title: const Text("Settings"),
         trailing: const Icon(Icons.arrow_forward_ios_outlined),

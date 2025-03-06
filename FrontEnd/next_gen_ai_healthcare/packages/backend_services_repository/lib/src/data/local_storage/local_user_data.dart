@@ -14,6 +14,7 @@ class LocalUserData {
       'id': user.userId,
       'name': user.userName,
       'email': user.email,
+      'token': user.password,
       'image': user.picture
     };
     int a = await db.insert('user', map, conflictAlgorithm: ConflictAlgorithm.replace);

@@ -19,7 +19,7 @@ class CustomCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 120,
+        height: 180,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
@@ -43,7 +43,7 @@ class CustomCard extends StatelessWidget {
               bottom: 10,
               child: Image.asset(
                 imagePath,
-                height: 100,
+                height: 130,
                 
                 fit: BoxFit.cover,
               ),

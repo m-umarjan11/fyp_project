@@ -15,7 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         Map<String, dynamic> check = await authentication.checkUserAccountOnStartUp();
         debugPrint(check.toString());
         if(check.isNotEmpty){ 
-          emit(AuthLoadingSuccess(user: User(userId: check['id'], userName: check['name'], email: check['email'], picture: check['picture'])));
+          emit(AuthLoadingSuccess(user: User(userId: check['id'], userName: check['name'], email: check['email'], picture: check['picture'], password: check['token'])));
         }else{
         debugPrint("here");
           emit(AuthError());
@@ -28,6 +28,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLogout>((event, emit){
       authentication.logout();
       add(Authenticate());
+    });
+
+    on<GoogleAuthRequired>((event, emit)async {
+      try{
+
+        if(await GoogleSignInAuth.isUserLoggedInWithGoogle()){
+          final account =  await GoogleSignInAuth.logOut();
+        }else{
+          final account =  await GoogleSignInAuth.login();
+        print("$account");
+      final user = User(userId: account!.id, userName: account.displayName??"", email: account.email, picture: account.photoUrl??"");
+      final googleAuntentication = await account.authentication;
+      print("${googleAuntentication.idToken}");
+      await authentication.loginWithGoogle(user:user, idToken: googleAuntentication.idToken);       
+      emit(AuthLoadingSuccess(user: user));  
+        }
+      }      catch (e){
+        print(e);
+        emit(GoogleAuthFailed());
+      }
     });
   }
 }

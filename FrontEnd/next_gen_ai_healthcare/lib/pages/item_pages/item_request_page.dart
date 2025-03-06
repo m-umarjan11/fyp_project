@@ -31,7 +31,7 @@ class _ItemRequestPageState extends State<ItemRequestPage> {
       appBar: AppBar(
         title: const Text("Your requests"),
       ),
-      body: items != null || items!.isNotEmpty
+      body: items != null 
           ? ListView.builder(
               itemBuilder: (context, index) => ListTile(
                     leading: Image(image: NetworkImage(items![index].images[0])),
