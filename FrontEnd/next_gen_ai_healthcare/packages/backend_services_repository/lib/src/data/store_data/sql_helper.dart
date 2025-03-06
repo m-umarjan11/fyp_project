@@ -28,6 +28,7 @@ class SqlHelper {
       id TEXT PRIMARY KEY,
       name TEXT,
       email TEXT,
+      token TEXT,
       image TEXT
     )''';
     await db.execute(sql);

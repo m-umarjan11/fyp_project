@@ -39,18 +39,11 @@ class StoreDataImp extends StoreData {
 
   @override
   Future<Result<String, String>> createItemObjectInDatabase(
-      String userId) async {
+      String userId, Item item) async {
     var request = http.post(
       Uri.parse("$api/items"),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'itemName': "newItem",
-        'userId': userId,
-        "location": {
-          "type": "Point",
-          "coordinates": [73.8567, 18.5204]
-        }
-      }),
+      body: json.encode(ItemEntity.toJson(Item.toEntity(item))),
     );
     var response = await request;
     if (response.statusCode == 201) {

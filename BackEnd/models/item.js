@@ -6,6 +6,8 @@ const itemSchema = new mongoose.Schema({
   description: { type: String, required: false, },
   images: { type: [String], required:false},
   rating: { type: Number, required:false},
+  isRented: { type: Boolean, required:false},
+  price: { type: Number, required:false},         
   sales: { type: Number, required:false},
   location: {
     type: { type: String, default: "Point" },

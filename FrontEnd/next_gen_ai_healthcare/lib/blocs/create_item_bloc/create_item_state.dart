@@ -9,11 +9,11 @@ sealed class CreateItemState extends Equatable {
 
 final class CreateItemInitial extends CreateItemState {}
 final class CreateItemSuccessState extends CreateItemState {
-  final Result success;
-  final List<String> images;
-  const CreateItemSuccessState({required this.success, required this.images});
+  // final Result success;
+  // final List<String> images;
+  const CreateItemSuccessState();
   @override 
-  List<Object> get props => [success];
+  List<Object> get props => [];
 }
 final class CreateItemLoadingState extends CreateItemState {}
 final class CreateItemLoadImages extends CreateItemState {
