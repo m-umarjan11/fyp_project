@@ -1,1 +1,3 @@
 *.html linguist-detectable=false
+*.pptx linguist-detectable=false
+*.ppt linguist-detectable=false
