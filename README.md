@@ -5,7 +5,7 @@ A platform combining AI-powered symptom diagnosis with a volunteer-driven medica
 
 **Live Profiling Report:**
 
-*The `index.html` file contains the y-data profiling report. You can view the live report [here](https://m-saad-0.github.io/fyp_project/).*
+*The `index.html` file contains the y-data profiling report. You can view the live report [here](https://m-saad-0.github.io/fyp_project/).* and kegel notebook [here](https://www.kaggle.com/code/muhammadumarjan/medical-recomendation).* 
 
 **Features:**
 
