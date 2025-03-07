@@ -3,4 +3,3 @@
 *.ppt linguist-detectable=false
 *.csv linguist-detectable=false
 *.pkl linguist-detectable=false
-*.ipynb linguist-detectable=false
