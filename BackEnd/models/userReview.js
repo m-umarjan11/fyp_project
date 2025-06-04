@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
-const userReviewsSchema = new mongoose.Schema({
-  renterId: { type: String, required: true }, //userId
-  ownerId: { type: String, required: true }, //userId
-  review: { type: String, required: true },
-});
+// const userReviewsSchema = new mongoose.Schema({
+//   renterId: { type: String, required: true }, //userId
+//   ownerId: { type: String, required: true }, //userId
+//   review: { type: String, required: true },
+// });
 
-module.exports = mongoose.model('UserReviews', userReviewsSchema);
+// module.exports = mongoose.model('UserReviews', userReviewsSchema);

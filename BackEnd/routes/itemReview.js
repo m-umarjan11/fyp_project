@@ -3,7 +3,7 @@ const router = express.Router();
 const itemReviewsController = require('../controllers/itemReview');
 
 router.get('/', itemReviewsController.getAllReviews);
-router.get('/:itemId', itemReviewsController.getReviewsByItemId);
+router.get('/query', itemReviewsController.getReviewsByItemId);
 router.post('/', itemReviewsController.addReview);
 router.delete('/:id', itemReviewsController.deleteReview);
 

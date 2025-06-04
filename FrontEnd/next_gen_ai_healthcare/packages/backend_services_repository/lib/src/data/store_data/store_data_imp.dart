@@ -1,22 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:backend_services_repository/src/data/api.dart';
-import 'package:backend_services_repository/src/data/store_data/store_data.dart';
-import 'package:backend_services_repository/src/item/entities/entities.dart';
-import 'package:backend_services_repository/src/item/models/item.dart';
-import 'package:backend_services_repository/src/result_wraper.dart';
+import 'package:backend_services_repository/backend_service_repositoy.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
 class StoreDataImp extends StoreData {
-  final String blobSASUrl =
-      '''https://nextgemedcare.blob.core.windows.net/nextgenmedcare-images?sp=r&st=2024-12-16T10:29:59Z&se=2024-12-27T18:29:59Z&spr=https&sv=2022-11-02&sr=c&sig=jTXfAuzT4xCcWmXR3%2FjSdr4mdb%2FNBwyj%2BeD59%2FdIR1s%3D''';
-  final String blobSASToken =
-      '''sp=r&st=2024-12-16T10:29:59Z&se=2024-12-27T18:29:59Z&spr=https&sv=2022-11-02&sr=c&sig=jTXfAuzT4xCcWmXR3%2FjSdr4mdb%2FNBwyj%2BeD59%2FdIR1s%3D''';
-  @override
+   @override
   Future<Result<String, String>> storeAnItem({required Item item}) async {
     Uri url = Uri.parse("$api/items");
 
@@ -50,7 +43,7 @@ class StoreDataImp extends StoreData {
       Map<String, dynamic> itemJson = json.decode(response.body);
       return Result.success(itemJson['_id']);
     } else {
-      return Result.failure(json.decode(response.body)['error']['message']);
+      return Result.failure(json.decode(response.body)['message']);
     }
   }
 
@@ -65,33 +58,64 @@ class StoreDataImp extends StoreData {
     }
   }
 
+  static Future<File> compressAndGetFile(File file) async {
+    var tempDir = Directory.systemTemp;
+    var targetPath = path.join(tempDir.path,
+        "${DateTime.now().millisecondsSinceEpoch}_${path.basename(file.path)}");
+    var imagePath = file.absolute.path;
+    var result =
+        await FlutterImageCompress.compressAndGetFile(imagePath, targetPath, quality: 50);
+    return result == null ? File(result!.path) : file;
+  }
+
   @override
-  Future<Result<String, String>> uploadToAzureBlobStorage(
+  Future<Result<List<String>, String>> uploadToCloudinary(
       List<String> images, String id) async {
     List<List<int>> imagesBytes = await Future.wait(images.map((p) async {
-      return await File(p).readAsBytes();
+      return await (await compressAndGetFile(File(p))).readAsBytes();
     }).toList());
-    bool isError = false;
+    List<String> imageUrl = [];
     for (int i = 0; i < images.length; i++) {
       String extension = path.extension(images[i]);
-      String uploadUrl =
-          "https://nextgemedcare.blob.core.windows.net/nextgenmedcare-images/$id-1.$extension?$blobSASToken";
-      final response = await http.post(Uri.parse(uploadUrl),
-          headers: {
-            'x-ms-blob-type': "BlockBlob",
-            "Content-Type": "image/$extension"
-          },
-          body: imagesBytes[i]);
-      if (response.statusCode == 201) {
-        debugPrint("Uploaded $id.$extension image");
+      final request = http.MultipartRequest("POST", Uri.parse(cloudinaryUrl))
+        ..fields['upload_preset'] = "ml_default"
+        ..fields['folder'] = "nextgenmedcare/$id"
+        ..files.add(http.MultipartFile.fromBytes(
+          'file',
+          imagesBytes[i],
+          filename: "$i$extension",
+        ));
+      final responseStream = await request.send();
+
+      if (responseStream.statusCode == 200) {
+        final responseBody = await http.Response.fromStream(responseStream);
+        final responseJson = json.decode(responseBody.body);
+        if (responseJson['secure_url'] == null) {
+          debugPrint("Error uploading $id.$extension image");
+          return Result.failure("Error uploading $id.$extension image");
+        } else {
+          debugPrint("Uploaded $id.$extension image");
+          imageUrl.add(responseJson['secure_url']);
+        }
+      } else if (responseStream.statusCode == 201) {
+        final responseBody = await http.Response.fromStream(responseStream);
+        final responseJson = json.decode(responseBody.body);
+        if (responseJson['secure_url'] == null) {
+          debugPrint("Error uploading $id.$extension image");
+          return Result.failure("Error uploading $id.$extension image");
+        } else {
+          debugPrint("Uploaded $id.$extension image");
+          imageUrl.add(responseJson['secure_url']);
+        }
       } else {
-        isError = true;
         debugPrint("Error uploading $id.$extension image");
+        return Result.failure("Error uploading $id.$extension image");
       }
     }
-    if (isError) {
-      return Result.failure("Error uploading images.");
+    if (imageUrl.isNotEmpty) {
+      return Result.success(imageUrl);
+    } else {
+      return Result.failure("Error uploading images");
     }
-    return Result.success("Successful");
   }
 }

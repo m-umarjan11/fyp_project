@@ -7,6 +7,16 @@ sealed class AuthEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class Authenticate extends AuthEvent{}
-class GoogleAuthRequired extends AuthEvent{}
-class AuthLogout extends AuthEvent{}
+class Authenticate extends AuthEvent {}
+
+class GoogleAuthRequired extends AuthEvent {}
+class AuthCredentialsRequired extends AuthEvent {}
+
+class GoogleAuthCnicPhoneRequired extends AuthEvent {
+  final User user;
+  const GoogleAuthCnicPhoneRequired({required this.user});
+  @override
+  List<Object> get props => [ user];
+}
+
+class AuthLogout extends AuthEvent {}

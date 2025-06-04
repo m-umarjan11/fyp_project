@@ -1,12 +1,15 @@
 const Item = require('./../models/item');
+const ItemBorrowed = require('./../models/itemBorrowed');
+const Wishlist = require('./../models/wishList');
+const {orderPlaced} = require('../middleware/fcmService');
+
 
 const handleError = (res, error, statusCode = 500, message = "Internal Server Error") => {
   res.status(statusCode).json({
-    error: {
-      code: statusCode,
-      message: message,
-      details: error.message || error,
-    },
+    code: statusCode,
+    message: message,
+    details:  error,
+
   });
 };
 
@@ -31,12 +34,13 @@ exports.getItemById = async (req, res) => {
 
 exports.createItem = async (req, res) => {
   try {
-    console.log(req.body)
+    //console.log(req.body)
     const newItem = new Item(req.body);
     const savedItem = await newItem.save();
+     orderPlaced(newItem, `Your item "${newItem.itemNamede}" has been created.`, "Item Created");
     res.status(201).json(savedItem);
   } catch (error) {
-    console.log(error)
+    //console.log(error)
     handleError(res, error, 500, "Failed to create new item");
   }
 };
@@ -57,7 +61,11 @@ exports.deleteItem = async (req, res) => {
   try {
     const deletedItem = await Item.findByIdAndDelete(req.params.itemId);
     if (!deletedItem) return res.status(404).json({ message: 'Item not found' });
-    res.status(200).json({ message: 'Item deleted' });
+    console.log("Deleted Item Borrowed: ", deletedItem);
+    const deletedItemBorrowed = await ItemBorrowed.deleteMany({itemId: req.params.itemId});
+     orderPlaced(deletedItem, `Your item "${deletedItem.itemName}" has been deleted.`, "Item Deleted");
+    // const deletedWishlist = await Wishlist.deleteMany({itemId: req.params.itemId});
+    res.status(204).json({ message: 'Item deleted' });
   } catch (error) {
     handleError(res, error, 500, "Failed to delete item");
   }
@@ -79,18 +87,87 @@ exports.getItemsNearMe = async (req, res) => {
         $geoNear: {
           near: {
             type: "Point",
-            coordinates: [userLocation.lng, userLocation.lat], 
+            coordinates: [userLocation.lng, userLocation.lat],
           },
-          distanceField: "distance", 
-          spherical: true, 
+          distanceField: "distance",
+          spherical: true,
         },
       },
-      { $skip: skip }, 
+      { $skip: skip },
       { $limit: ITEMS_PER_PAGE },
     ]);
 
     res.status(200).json(items);
   } catch (error) {
     handleError(res, error, 500, "Failed to fetch items near you");
+  }
+};
+
+
+exports.searchItems = async (req, res) => {
+  try {
+    //console.log("searchTerm, longitude, latitude", req.query);
+    const searchTerm = req.query.search;
+    const longitude = parseFloat(req.query.longitude);
+    const latitude = parseFloat(req.query.latitude);
+    if (!searchTerm) return handleError(res, null, 400, "No search term provided");
+
+    const items = await Item.find({
+      itemName: { $regex: searchTerm, $options: "i" }, 
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [longitude, latitude],
+          },
+          $maxDistance: 10000, 
+        },
+      },
+    });
+
+    if (!items.length) return handleError(res, null, 404, "No medical equipment found");
+
+    res.status(200).json(items);
+  } catch (error) {
+    console.error("Error searching items:", error);
+    handleError(res, error, 500, "Failed to search items");
+  }
+};
+
+exports.getItemsByUserId = async (req, res) => {
+  try {
+    const items = await Item.find({ userId: req.params.userId });
+    if (!items.length) return res.status(404).json({ message: 'No items found for this user' });
+    res.status(200).json(items);
+  } catch (error) {
+    handleError(res, error, 500, "Failed to fetch items by user ID");
+  }
+};
+
+exports.getSpecificItemCount = async (req, res) => {
+  try {
+    //console.log(req.query)
+    const { itemno, latitude, longitude } = req.query;
+    const count = parseInt(itemno) || 10;
+
+    const items = await Item.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(longitude), parseFloat(latitude)]
+          },
+          $maxDistance: 10000
+        }
+      }
+    }).limit(count);
+
+    if (!items || items.length === 0) {
+      return handleError(res, null, 404, "No items found");
+    }
+
+    res.status(200).json({'items':items});
+  } catch (error) {
+    handleError(res, error, 500, "Server error");
   }
 };

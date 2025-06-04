@@ -17,6 +17,9 @@ class _SignUpPageState extends State<SignUpPage> {
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
   final nameController = TextEditingController();
+  final cnicController = TextEditingController();
+  final phoneController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
   IconData iconPassword = CupertinoIcons.eye_fill;
   bool obscurePassword = true;
@@ -53,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
               break;
             }
           default:
-            debugPrint("Normal Life");
+          // debugPrint("Normal Life");
         }
         return SingleChildScrollView(
           child: Form(
@@ -163,68 +166,58 @@ class _SignUpPageState extends State<SignUpPage> {
                         }),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "⚈  1 uppercase",
-                            style: TextStyle(
-                                color: containsUpperCase
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface),
-                          ),
-                          Text(
-                            "⚈  1 lowercase",
-                            style: TextStyle(
-                                color: containsLowerCase
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface),
-                          ),
-                          Text(
-                            "⚈  1 number",
-                            style: TextStyle(
-                                color: containsNumber
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "⚈  1 special character",
-                            style: TextStyle(
-                                color: containsSpecialChar
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface),
-                          ),
-                          Text(
-                            "⚈  8 minimum character",
-                            style: TextStyle(
-                                color: contains8Length
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text(
+                  //           "⚈  1 uppercase",
+                  //           style: TextStyle(
+                  //               color: containsUpperCase
+                  //                   ? Theme.of(context).primaryColor
+                  //                   : Theme.of(context).colorScheme.onSurface),
+                  //         ),
+                  //         Text(
+                  //           "⚈  1 lowercase",
+                  //           style: TextStyle(
+                  //               color: containsLowerCase
+                  //                   ? Theme.of(context).primaryColor
+                  //                   : Theme.of(context).colorScheme.onSurface),
+                  //         ),
+                  //         Text(
+                  //           "⚈  1 number",
+                  //           style: TextStyle(
+                  //               color: containsNumber
+                  //                   ? Theme.of(context).primaryColor
+                  //                   : Theme.of(context).colorScheme.onSurface),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //     Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text(
+                  //           "⚈  1 special character",
+                  //           style: TextStyle(
+                  //               color: containsSpecialChar
+                  //                   ? Theme.of(context).primaryColor
+                  //                   : Theme.of(context).colorScheme.onSurface),
+                  //         ),
+                  //         Text(
+                  //           "⚈  8 minimum character",
+                  //           style: TextStyle(
+                  //               color: contains8Length
+                  //                   ? Theme.of(context).primaryColor
+                  //                   : Theme.of(context).colorScheme.onSurface),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 10),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: MyTextField(
@@ -242,17 +235,76 @@ class _SignUpPageState extends State<SignUpPage> {
                           return null;
                         }),
                   ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: MyTextField(
+                      controller: phoneController,
+                      hintText: 'Phone Number',
+                      obscureText: false,
+                      keyboardType: TextInputType.phone,
+                      prefixIcon: const Icon(CupertinoIcons.phone),
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please fill in this field';
+                        } else if (!RegExp(r'^\d{10,15}$').hasMatch(val)) {
+                          return 'Invalid phone number';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: MyTextField(
+                      controller: cnicController,
+                      hintText: 'CNIC(1111-11111111-1)',
+                      obscureText: false,
+                      keyboardType: TextInputType.number,
+                      prefixIcon:
+                          const Icon(CupertinoIcons.person_crop_rectangle),
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Please fill in this field';
+                        } else if (!RegExp(r'^\d{13}$')
+                            .hasMatch(val.replaceAll("-", ""))) {
+                          return 'Invalid CNIC (13 digits required)';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   !signUpRequired
                       ? SizedBox(
                           width: MediaQuery.of(context).size.width * 0.5,
                           child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
+                                  String raw =
+                                      cnicController.text.replaceAll("-", "");
+                                  if (raw.length >= 13) {
+                                    cnicController.text =
+                                        '${raw.substring(0, 5)}-${raw.substring(5, 12)}-${raw.substring(12)}';
+                                  }
+                                  Map<String, dynamic> userLocation =
+                                      await LocationServicesImp().getLocation();
+
                                   User myUser = User(
-                                      userId: "",
-                                      userName: nameController.text,
-                                      email: emailController.text);
+                                    userId: "",
+                                    userName: nameController.text,
+                                    email: emailController.text,
+                                    location: {
+                                      'type': "Point",
+                                      "coordinates": [
+                                        userLocation['longitude'],
+                                        userLocation['latitude'],
+                                      ]
+                                    },
+                                    phoneNumber: phoneController.text,
+                                    cnic: cnicController.text,
+                                  );
 
                                   setState(() {
                                     context.read<SignUpBloc>().add(

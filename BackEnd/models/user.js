@@ -23,9 +23,30 @@ const userSchema = new mongoose.Schema({
       message: (props) => `${props.value} is not a valid email!`,
     },
   },
+  phoneNumber: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        return validator.isMobilePhone(v, 'any'); // or 'en-PK' for Pakistan-specific format
+      },
+      message: (props) => `${props.value} is not a valid phone number!`,
+    },
+  },
+  cnic: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (v) {
+        return /^[0-9]{5}-[0-9]{7}-[0-9]{1}$/.test(v); // CNIC format e.g. 12345-1234567-1
+      },
+      message: (props) => `${props.value} is not a valid CNIC!`,
+    },
+  },
   picture: {
     type: String,
     required: false,
+    default: "",
   },
   personReputation: {
     type: Number,
@@ -35,10 +56,18 @@ const userSchema = new mongoose.Schema({
     type: { type: String, default: "Point" },
     coordinates: { type: [Number], required: false, default: [0, 0] },
   },
-},{timestamps: true});
+  accountId: {
+    type: String,
+    default: null,
+  },
+  fcmToken: {
+    type: String,
+    default: null,
+  },
+}, { timestamps: true });
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password") || !this.password) {  
+  if (!this.isModified("password") || !this.password) {
     return next();
   }
 
@@ -60,4 +89,5 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 };
 
 userSchema.index({ location: '2dsphere' });
+
 module.exports = mongoose.model("User", userSchema);

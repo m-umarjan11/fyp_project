@@ -10,5 +10,7 @@ router.post('/google-login', userController.loginWithGoogle);
 router.get('/:userId', userController.getUser);
 router.put('/:userId', userController.updateUser);
 router.delete('/:userId', userController.deleteUser);
+router.post('/save-token', userController.saveFcmToken);
+
 
 module.exports = router;

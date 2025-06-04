@@ -4,17 +4,22 @@
   "description": "It will be a medical rental system where people will rent medical equipment to the people need it in emergency or otherwise. It also include an AI model that will diagnose people based on symptoms.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "start": "node index.js"
   },
   "author": "saad_zaid_umar_ilyas",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "firebase-admin": "^13.4.0",
     "google-auth-library": "^9.15.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.2",
+    "stripe": "^18.1.1",
     "validator": "^13.12.0"
   }
 }

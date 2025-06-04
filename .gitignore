@@ -1,46 +1,45 @@
-./BackEnd/nodemodules
-# Miscellaneous
-*.class
+# General
 *.log
+*.class
 *.pyc
 *.swp
 .DS_Store
-.atom/
-.buildlog/
-.history
-.svn/
-migrate_working_dir/
 
-# IntelliJ related
+# IDEs
+.idea/
 *.iml
 *.ipr
 *.iws
-.idea/
+.atom/
+.vscode/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# Flutter & Dart
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.pub-cache/
 .pub/
-/build/
+.pub-cache/
+build/
+**/doc/api/
+**/ios/Flutter/.last_build_id
 
-# Symbolication related
-app.*.symbols
+# Android
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+/app.*.symbols
+/app.*.map.json
 
-# Obfuscation related
-app.*.map.json
+# Node
+node_modules/
+BackEnd/node_modules/
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-n o d e _ m o d u l e s /  
- 
+# Misc
+migrate_working_dir/
+.buildlog/
+.history/
+.svn/
+
+# Specific files/folders
+firebase_options.dart
+Medicine-Recommendation-System-Personalized-Medical-Recommendation-System-with-Machine-Learning/app/vectorstore/db_faiss/

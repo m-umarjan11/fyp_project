@@ -1,8 +1,14 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:backend_services_repository/backend_service_repositoy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:next_gen_ai_healthcare/blocs/auth_bloc/auth_bloc.dart';
 import 'package:next_gen_ai_healthcare/blocs/create_item_bloc/create_item_bloc.dart';
+import 'package:next_gen_ai_healthcare/widgets/show_toast.dart';
 
 class AddItem extends StatefulWidget {
   const AddItem({super.key});
@@ -14,10 +20,11 @@ class AddItem extends StatefulWidget {
 class _AddItemState extends State<AddItem> {
   final _formKey = GlobalKey<FormState>();
   final _itemNameController = TextEditingController();
-  final _priceController= TextEditingController();
+  final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _sellerController = TextEditingController();
   List<String>? images;
+  bool showRemoveButton = false;
   @override
   void dispose() {
     _itemNameController.dispose();
@@ -30,7 +37,7 @@ class _AddItemState extends State<AddItem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Item'),
+        title: const Text('Add Medical Equipment'),
       ),
       body: Stack(
         children: [
@@ -46,7 +53,7 @@ class _AddItemState extends State<AddItem> {
                       TextFormField(
                         controller: _itemNameController,
                         decoration:
-                            const InputDecoration(labelText: 'Item Name'),
+                            const InputDecoration(labelText: 'Medical Instrument Name', prefixIcon: Icon(Icons.medical_information)),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Item Name';
@@ -57,17 +64,17 @@ class _AddItemState extends State<AddItem> {
                       const SizedBox(
                         height: 10,
                       ),
-
                       TextFormField(
                         controller: _descriptionController,
+                        
                         decoration:
-                            const InputDecoration(labelText: 'Description'),
+                            const InputDecoration(labelText: 'Description', prefixIcon: Icon(Icons.list)),
                         maxLines: 3,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Description';
                           }
-                          if(double.tryParse(_priceController.text)==null){
+                          if (double.tryParse(_priceController.text) == null) {
                             return "Please enter a valid number";
                           }
                           return null;
@@ -78,82 +85,131 @@ class _AddItemState extends State<AddItem> {
                       ),
                       TextFormField(
                         controller: _priceController,
+                        keyboardType: TextInputType.number,
+                        maxLength: 2,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         decoration:
-                            const InputDecoration(labelText: 'Item Price'),
+                            const InputDecoration(labelText: 'Item Price Per Hour', prefixIcon:Icon(Icons.monetization_on) ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter Item Price';
                           }
+                          if(double.parse(value)>40){
+                            return 'Please set lower per hour price';
+
+                          }
                           return null;
                         },
                       ),
-                     
                       const SizedBox(height: 16),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     context
-                      //         .read<CreateItemBloc>()
-                      //         .add(CreateItemLoadImagesEvent());
-                      //   },
-                      //   child: const Text('Pick Images'),
-                      // ),
-                      // const SizedBox(height: 16),
-                      // const Text('Selected Images:'),
-                      // BlocBuilder<CreateItemBloc, CreateItemState>(
-                      //   builder: (context, state) {
-                      //     if (state is CreateItemLoadImages) {
-                      //       images = state.images;
-                      //       return SizedBox(
-                      //         height: 100,
-                      //         child: ListView.builder(
-                      //           scrollDirection: Axis.horizontal,
-                      //           itemCount: images!.length,
-                      //           itemBuilder: (context, index) {
-                      //             return Padding(
-                      //               padding: const EdgeInsets.all(8.0),
-                      //               child: Image.file(
-                      //                 File(images![index]),
-                      //                 width: 100,
-                      //                 height: 100,
-                      //                 fit: BoxFit.cover,
-                      //               ),
-                      //             );
-                      //           },
-                      //         ),
-                      //       );
-                      //     } else {
-                      //       return const SizedBox();
-                      //     }
-                      //   },
-                      // ),
-                      // const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () {
+                          context.read<CreateItemBloc>().add(
+                              CreateItemLoadImagesEvent(
+                                  previousImages: images ?? []));
+                        },
+                        child: const Text('Pick Images'),
+                      ),
+                      BlocBuilder<CreateItemBloc, CreateItemState>(
+                        builder: (context, state) {
+                          if (state is CreateItemLoadImages) {
+                            images = state.images;
+                            return Column(
+                              children: [
+                                const SizedBox(height: 16),
+                                const Text('Selected Images:'),
+                                SizedBox(
+                                  height: 100,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: images!.length,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Stack(
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  showRemoveButton = true;
+                                                });
+                                                Timer(
+                                                    const Duration(seconds: 2),
+                                                    () {
+                                                  setState(() {
+                                                    showRemoveButton = false;
+                                                  });
+                                                });
+                                              },
+                                              child: Image.file(
+                                                File(images![index]),
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            AnimatedContainer(
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              child: showRemoveButton
+                                                  ? Container(
+                                                    width: 100,
+                                                                                                  height: 100,
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              88, 0, 0, 0),
+                                                      child: Center(
+                                                        child: IconButton(
+                                                            onPressed: () {
+                                                              showToastMessage("${images![index]} was removed");
+                                                              images!.remove(images![index]);
+                                                             context.read<CreateItemBloc>().add(CreateItemRemoveImagesEvent(imageToRemove: images!));
+                                                            },
+                                                            icon: const Icon(
+                                                                Icons.delete)),
+                                                      ),
+                                                    )
+                                                  : null,
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () {
                           final authState = context.read<AuthBloc>().state
                               as AuthLoadingSuccess;
                           if (_formKey.currentState!.validate()) {
-                            context.read<CreateItemBloc>().add(
-                                CreateItemRequiredEvent(
+                            context
+                                .read<CreateItemBloc>()
+                                .add(CreateItemRequiredEvent(
                                   userId: authState.user.userId,
-                                    item: Item(
-                                        itemId: "",
-                                        userId: authState.user.userId,
-                                        itemName: _itemNameController.text,
-                                        description:
-                                            _descriptionController.text,
-                                        // images: images!,
-                                        images: ["https://www.accu-chek.com.pk/sites/g/files/iut956/f/styles/image_300x400/public/media_root/product_media_files/product_images/active-mgdl-300x400.png?itok=bgvuYJFy"],
-                                        location: {},
-                                        seller: authState.user.userName,
-                                        sold: 0,
-                                        rating: 0,
-                                        price: int.parse(_priceController.text),
-                                        isRented: false
-                                        ),
-                                    // imagePaths: images!
-                                        imagePaths: const ["https://www.accu-chek.com.pk/sites/g/files/iut956/f/styles/image_300x400/public/media_root/product_media_files/product_images/active-mgdl-300x400.png?itok=bgvuYJFy"],
-                                        
-                                    ));
+                                  item: Item(
+                                      itemId: "",
+                                      userId: authState.user.userId,
+                                      itemName: _itemNameController.text,
+                                      description: _descriptionController.text,
+                                      // images: images!,
+                                      images: images ?? [],
+                                      location: authState.user.location??{},
+                                      seller: authState.user.userName,
+                                      sold: 0,
+                                      rating: 0,
+                                      price: int.parse(_priceController.text),
+                                      isRented: false),
+                                  // imagePaths: images!
+                                  imagePaths: images ?? [],
+                                ));
                           }
                         },
                         child: const Text('Submit'),
@@ -164,23 +220,41 @@ class _AddItemState extends State<AddItem> {
               ),
             ),
           ),
-          BlocBuilder<CreateItemBloc ,CreateItemState>(
+          BlocBuilder<CreateItemBloc, CreateItemState>(
             builder: (context, state) {
-              if(state is CreateItemLoadingState){
+              if (state is CreateItemLoadingState) {
                 return Container(
-                color: const Color.fromARGB(108, 0, 0, 0),
-                child: const Center(child: CircularProgressIndicator(),),
-              );
-              } else if(state is CreateItemSuccessState){
-                return  InkWell(
-                  onTap: (){Navigator.of(context).pop();},
-                  child: Container(
                   color: const Color.fromARGB(108, 0, 0, 0),
-                    child: const AlertDialog(title: Text("Success"),content: Column(mainAxisSize:MainAxisSize.min, children: [Icon(Icons.verified, size: 50,),Text("Successfully created the item")],),)),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 );
-              }else if(state is CreateItemErrorState){
-                return  SizedBox(child: Text(state.errorMessage),);
-              }else{
+              } else if (state is CreateItemSuccessState) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                      color: const Color.fromARGB(108, 0, 0, 0),
+                      child: const AlertDialog(
+                        title: Text("Success"),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.verified,
+                              size: 50,
+                            ),
+                            Text("Successfully created the item")
+                          ],
+                        ),
+                      )),
+                );
+              } else if (state is CreateItemErrorState) {
+                return SizedBox(
+                  child: Text(state.errorMessage),
+                );
+              } else {
                 return const SizedBox();
               }
             },

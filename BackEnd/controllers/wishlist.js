@@ -1,25 +1,61 @@
+const Wishlist = require('../models/wishList');
+const Item = require('../models/item');
 
-const Wishlist = require('./../models/wishList');
+const handleError = (res, error, statusCode = 500, message = "Internal Server Error") => {
+  res.status(statusCode).json({
+    code: statusCode,
+    message: message,
+    details: error.message || error,
+  });
+};
 
 exports.createWishlist = async (req, res) => {
   try {
+    const existingWishlist = await Wishlist.findOne({ userId: req.body.userId });
+    if (existingWishlist) {
+      existingWishlist.items.push({itemId: req.body.item});
+      await existingWishlist.save();
+      res.status(201).json(existingWishlist);
+      return;
+    }
     const wishlist = new Wishlist(req.body);
+    wishlist.items.push({itemId: req.body.item});
+
     await wishlist.save();
-    res.status(201).send(wishlist);
+    res.status(201).json(wishlist);
   } catch (error) {
-    res.status(400).send(error);
+    handleError(res, error, 400, "Failed to create wishlist");
   }
 };
 
 exports.getWishlist = async (req, res) => {
   try {
-    const wishlist = await Wishlist.findOne({ userId: req.params.userId }).populate('items.itemId');
-    if (!wishlist) return res.status(404).send('Wishlist not found');
-    res.send(wishlist);
+    const wishlist = await Wishlist.findOne({ userId: req.params.userId });
+
+    if (!wishlist || wishlist.items.length === 0) {
+      return res.status(404).json({ message: 'Wishlist not found' });
+    }
+
+    const items = (await Promise.all(
+      wishlist.items.map(async (entry) => {
+        const item = await Item.findById(entry.itemId);
+        if (!item) {
+          await Wishlist.updateOne(
+            { _id: wishlist._id },
+            { $pull: { items: { itemId: entry.itemId } } }
+          );
+          return null;
+        }
+        return item;
+      })
+    )).filter(Boolean); // removes nulls
+
+    res.status(200).json({ items });
   } catch (error) {
-    res.status(500).send(error);
+    handleError(res, error);
   }
 };
+
 
 exports.updateWishlist = async (req, res) => {
   try {
@@ -28,20 +64,40 @@ exports.updateWishlist = async (req, res) => {
       { $set: req.body },
       { new: true }
     ).populate('items.itemId');
-    
-    if (!wishlist) return res.status(404).send('Wishlist not found');
-    res.send(wishlist);
+
+    if (!wishlist) return res.status(404).json({ message: 'Wishlist not found' });
+    res.status(200).json(wishlist);
   } catch (error) {
-    res.status(400).send(error);
+    handleError(res, error, 400, "Failed to update wishlist");
   }
 };
 
 exports.deleteWishlist = async (req, res) => {
   try {
-    const wishlist = await Wishlist.findOneAndDelete({ userId: req.params.userId });
-    if (!wishlist) return res.status(404).send('Wishlist not found');
-    res.send({ message: 'Wishlist deleted successfully' });
+    const wishlist = await Wishlist.findOne({ userId: req.params.userId });
+    wishlist.items = wishlist.items.filter(item => item.itemId.toString() !== req.params.itemId);
+    if (wishlist.items.length === 0) {
+      await Wishlist.findOneAndDelete({ userId: req.params.userId });
+    } else {
+      await wishlist.save();
+    }
+    if (!wishlist) return res.status(404).json({ message: 'Wishlist not found' });
+    res.status(200).json({ message: 'Wishlist deleted successfully' });
   } catch (error) {
-    res.status(500).send(error);
+    handleError(res, error);
   }
+};
+
+
+exports.getCurrentState = async (req, res) => {
+  try {
+    const existingWishlist = await Wishlist.findOne({ userId: req.params.userId});
+    if (existingWishlist) {
+      if(existingWishlist.items.filter(item => item.itemId.toString() === req.params.itemId).length>0){
+        return res.status(200).json({ isWishlisted: true });
+      }
+    }} catch (error) {
+    handleError(res, error, 400, "Failed to get current state of wishlist")
+  }
+  res.status(200).json({ isWishlisted: false });
 };
